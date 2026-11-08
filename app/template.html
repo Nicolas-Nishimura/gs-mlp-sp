@@ -1,0 +1,780 @@
+<meta charset="utf-8">
+<title>Roubo ou Furto SP</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+/* Layout: ficha de ocorrencia a esquerda, leitura do classificador a direita;
+   empilha em coluna unica abaixo de 860px. */
+:root {
+  --papel: #F7F8FA;
+  --ficha: #FFFFFF;
+  --tinta: #141A22;
+  --tinta-fraca: #5C6775;
+  --linha: #D9DEE6;
+  --linha-forte: #AEB7C4;
+  --roubo: #B4341C;
+  --roubo-suave: #F2DDD7;
+  --furto: #1F5B8C;
+  --furto-suave: #D8E4EF;
+  --destaque: #0E7C66;
+
+  --fonte-texto: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --fonte-dados: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #0E1217;
+    --ficha: #171D25;
+    --tinta: #E8ECF2;
+    --tinta-fraca: #96A1B0;
+    --linha: #2A323D;
+    --linha-forte: #3E4855;
+    --roubo: #E8795E;
+    --roubo-suave: #3A211B;
+    --furto: #6FA8D8;
+    --furto-suave: #17293A;
+    --destaque: #4FC3A6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #0E1217;
+  --ficha: #171D25;
+  --tinta: #E8ECF2;
+  --tinta-fraca: #96A1B0;
+  --linha: #2A323D;
+  --linha-forte: #3E4855;
+  --roubo: #E8795E;
+  --roubo-suave: #3A211B;
+  --furto: #6FA8D8;
+  --furto-suave: #17293A;
+  --destaque: #4FC3A6;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fonte-texto);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.envelope {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 44px;
+}
+
+/* ---------- cabecalho ---------- */
+.topo { border-bottom: 2px solid var(--tinta); padding-bottom: 14px; }
+.orgao {
+  font-family: var(--fonte-dados);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+}
+h1 {
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  margin: 6px 0 8px;
+  text-wrap: balance;
+}
+.linha-fina { color: var(--tinta-fraca); max-width: 62ch; margin: 0; font-size: 14px; }
+
+.aviso-origem {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--ficha);
+  border: 1px solid var(--linha);
+  border-left: 3px solid var(--destaque);
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--tinta-fraca);
+}
+.aviso-origem strong { color: var(--tinta); font-weight: 600; }
+
+/* ---------- grade principal ---------- */
+.grade {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  margin-top: 24px;
+}
+@media (min-width: 860px) { .grade { grid-template-columns: 1.05fr .95fr; align-items: start; } }
+
+.cartao {
+  background: var(--ficha);
+  border: 1px solid var(--linha);
+  min-width: 0;
+}
+.cartao > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--linha);
+}
+.cartao h2 {
+  font-size: 13px;
+  font-family: var(--fonte-dados);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.cartao .conteudo { padding: 18px; }
+
+/* ---------- formulario ---------- */
+.campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+.campo { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.campo.largo { grid-column: 1 / -1; }
+label {
+  font-family: var(--fonte-dados);
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  font-weight: 500;
+}
+select, input[type="number"] {
+  font-family: var(--fonte-texto);
+  font-size: 14px;
+  color: var(--tinta);
+  background: var(--papel);
+  border: 1px solid var(--linha-forte);
+  border-radius: 0;
+  padding: 8px 9px;
+  width: 100%;
+  min-width: 0;
+}
+select:focus-visible, input:focus-visible, button:focus-visible {
+  outline: 2px solid var(--destaque);
+  outline-offset: 1px;
+}
+.ajuda { font-size: 11.5px; color: var(--tinta-fraca); line-height: 1.35; }
+
+.faixa-hora { display: flex; align-items: center; gap: 12px; }
+input[type="range"] { flex: 1; min-width: 0; accent-color: var(--destaque); }
+.relogio {
+  font-family: var(--fonte-dados);
+  font-size: 19px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  min-width: 62px;
+  text-align: right;
+}
+
+.acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; align-items: center; }
+button {
+  font-family: var(--fonte-texto);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border: 1px solid var(--tinta);
+  background: var(--tinta);
+  color: var(--ficha);
+  cursor: pointer;
+}
+button.secundario { background: transparent; color: var(--tinta); border-color: var(--linha-forte); font-weight: 500; }
+button:hover { opacity: .88; }
+
+.exemplos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.exemplos span {
+  font-family: var(--fonte-dados);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  align-self: center;
+  margin-right: 2px;
+}
+.chip {
+  font-family: var(--fonte-texto);
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 5px 11px;
+  border: 1px dashed var(--linha-forte);
+  background: transparent;
+  color: var(--tinta-fraca);
+  cursor: pointer;
+}
+.chip:hover { color: var(--tinta); border-style: solid; }
+
+/* ---------- resultado ---------- */
+.veredito { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.classe {
+  font-size: clamp(32px, 7vw, 46px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1;
+}
+.classe.roubo { color: var(--roubo); }
+.classe.furto { color: var(--furto); }
+.confianca { font-family: var(--fonte-dados); font-size: 13px; color: var(--tinta-fraca); font-variant-numeric: tabular-nums; }
+
+.barra { margin-top: 18px; }
+.barra-trilho {
+  position: relative;
+  display: flex;
+  height: 38px;
+  border: 1px solid var(--linha-forte);
+  overflow: hidden;
+}
+.barra-seg { display: flex; align-items: center; transition: width .35s ease; }
+.barra-seg.furto { background: var(--furto); justify-content: flex-start; }
+.barra-seg.roubo { background: var(--roubo); justify-content: flex-end; }
+.barra-seg b {
+  font-family: var(--fonte-dados);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #fff;
+  padding: 0 9px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.corte {
+  position: absolute;
+  top: -1px; bottom: -1px; left: 50%;
+  width: 0; border-left: 2px dashed var(--ficha);
+}
+.aviso-pendente {
+  margin: 0 0 14px;
+  padding: 9px 11px;
+  border: 1px dashed var(--linha-forte);
+  background: var(--papel);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--tinta-fraca);
+}
+.aviso-pendente strong { color: var(--tinta); }
+#painelResultado { transition: opacity .18s ease; }
+#painelResultado.pendente { opacity: .38; }
+@media (prefers-reduced-motion: reduce) { #painelResultado { transition: none; } }
+
+.nota-limiar {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--tinta-fraca);
+}
+.linha-base {
+  margin: 10px 0 0;
+  font-family: var(--fonte-dados);
+  font-size: 11.5px;
+  color: var(--tinta-fraca);
+  font-variant-numeric: tabular-nums;
+}
+.barra-legenda {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--fonte-dados);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  margin-top: 6px;
+}
+
+.leitura {
+  margin-top: 18px;
+  padding: 13px 14px;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.leitura p { margin: 0 0 8px; }
+.leitura p:last-child { margin-bottom: 0; }
+.leitura .errado { color: var(--tinta-fraca); }
+.marca-ok, .marca-x { font-family: var(--fonte-dados); font-weight: 600; }
+.marca-ok { color: var(--destaque); }
+.marca-x { color: var(--roubo); }
+
+/* ---------- ficha do modelo ---------- */
+.metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: 1px;
+  background: var(--linha);
+  border: 1px solid var(--linha);
+}
+.metrica { background: var(--ficha); padding: 11px 12px; }
+.metrica dt {
+  font-family: var(--fonte-dados);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+}
+.metrica dd {
+  margin: 3px 0 0;
+  font-family: var(--fonte-dados);
+  font-size: 19px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabela-arq { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+.tabela-arq th, .tabela-arq td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--linha); }
+.tabela-arq th {
+  font-family: var(--fonte-dados);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
+  font-weight: 500;
+}
+.tabela-arq td.num { font-family: var(--fonte-dados); font-variant-numeric: tabular-nums; text-align: right; }
+.tabela-arq tr.escolhida td { font-weight: 600; }
+.tabela-arq tr.escolhida td:first-child::before { content: "▸ "; color: var(--destaque); }
+.rolagem { overflow-x: auto; }
+
+.rede { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; font-size: 12.5px; }
+.rede code {
+  font-family: var(--fonte-dados);
+  font-size: 12px;
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  padding: 3px 7px;
+}
+.rede .seta { color: var(--tinta-fraca); }
+
+footer {
+  margin-top: 34px;
+  padding-top: 14px;
+  border-top: 1px solid var(--linha);
+  font-size: 12.5px;
+  color: var(--tinta-fraca);
+}
+footer a { color: var(--destaque); }
+
+@media (max-width: 520px) { .campos { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .barra-seg { transition: none; } }
+</style>
+
+<div class="envelope">
+
+  <header class="topo">
+    <div class="orgao">Global Solution · Aprendizado profundo com redes neurais</div>
+    <h1>Roubo ou furto?</h1>
+    <p class="linha-fina">
+      Uma MLP treinada com registros de subtração de celulares no município de São
+      Paulo. Descreva uma ocorrência e a rede estima se o registro é mais compatível
+      com <strong>roubo</strong> (com violência ou grave ameaça, art.&nbsp;157) ou com
+      <strong>furto</strong> (sem violência, art.&nbsp;155).
+    </p>
+    <div class="aviso-origem" id="avisoOrigem"></div>
+  </header>
+
+  <div class="grade">
+
+    <!-- ---------------- ficha ---------------- -->
+    <section class="cartao">
+      <header>
+        <h2>Ficha da ocorrência</h2>
+        <span class="confianca" id="contadorEntradas"></span>
+      </header>
+      <div class="conteudo">
+        <form id="ficha" autocomplete="off">
+          <div class="campos">
+
+            <div class="campo largo">
+              <label for="f_hora">Hora da ocorrência</label>
+              <div class="faixa-hora">
+                <input type="range" id="f_hora" min="0" max="23" step="1" value="21">
+                <span class="relogio" id="relogio">21h</span>
+              </div>
+              <span class="ajuda">A hora entra na rede também como seno e cosseno, para que 23h e 0h fiquem próximas.</span>
+            </div>
+
+            <div class="campo">
+              <label for="f_periodo">Período</label>
+              <select id="f_periodo"></select>
+              <span class="ajuda" id="ajudaPeriodo">Acompanha a hora; pode ser alterado.</span>
+            </div>
+
+            <div class="campo">
+              <label for="f_dia_semana">Dia da semana</label>
+              <select id="f_dia_semana"></select>
+            </div>
+
+            <div class="campo">
+              <label for="f_bairro">Bairro do fato</label>
+              <select id="f_bairro"></select>
+            </div>
+
+            <div class="campo">
+              <label for="f_tipo_local">Tipo de local</label>
+              <select id="f_tipo_local"></select>
+            </div>
+
+            <div class="campo">
+              <label for="f_marca_objeto">Marca do aparelho</label>
+              <select id="f_marca_objeto"></select>
+            </div>
+
+            <div class="campo">
+              <label for="f_mes">Mês</label>
+              <select id="f_mes"></select>
+            </div>
+
+            <div class="campo largo">
+              <label for="f_dias">Dias entre o fato e o registro do B.O.</label>
+              <input type="number" id="f_dias" min="0" max="365" step="1" value="0">
+              <span class="ajuda">Quem é abordado com violência costuma registrar no mesmo dia; quem só percebe a falta depois demora mais.</span>
+            </div>
+
+          </div>
+
+          <div class="acoes">
+            <button type="submit">Classificar</button>
+            <button type="button" class="secundario" id="btnSorteio">Sortear ocorrência</button>
+          </div>
+
+          <div class="exemplos">
+            <span>Exemplos</span>
+            <button type="button" class="chip" data-exemplo="0">Abordagem noturna na Sé</button>
+            <button type="button" class="chip" data-exemplo="1">Celular sumido em bar</button>
+            <button type="button" class="chip" data-exemplo="2">Terminal lotado na hora do rush</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ---------------- leitura ---------------- -->
+    <section class="cartao">
+      <header>
+        <h2>Leitura do classificador</h2>
+        <span class="confianca" id="txtLimiar"></span>
+      </header>
+      <div class="conteudo">
+        <p class="aviso-pendente" id="avisoPendente" hidden>
+          A ficha mudou. Clique em <strong>Classificar</strong> para a rede avaliar os novos valores.
+        </p>
+        <div id="painelResultado">
+        <div class="veredito">
+          <span class="classe" id="classe">—</span>
+          <span class="confianca" id="resumoProb"></span>
+        </div>
+
+        <div class="barra">
+          <div class="barra-trilho">
+            <div class="barra-seg furto" id="segFurto"><b id="pctFurto"></b></div>
+            <div class="barra-seg roubo" id="segRoubo"><b id="pctRoubo"></b></div>
+            <div class="corte" id="corte"></div>
+          </div>
+          <div class="barra-legenda"><span>Furto</span><span>Roubo</span></div>
+          <p class="nota-limiar" id="notaLimiar"></p>
+        </div>
+
+        <div class="leitura">
+          <p><span class="marca-ok">Leitura correta</span> <span id="textoCerto"></span></p>
+          <p class="errado"><span class="marca-x">Leitura incorreta</span> <span id="textoErrado"></span></p>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------- ficha tecnica ---------------- -->
+    <section class="cartao" style="grid-column: 1 / -1;">
+      <header>
+        <h2>Modelo em produção</h2>
+        <span class="confianca" id="nomeArquitetura"></span>
+      </header>
+      <div class="conteudo">
+        <dl class="metricas" id="metricas"></dl>
+        <p class="linha-base" id="linhaBase"></p>
+
+        <div class="rede" id="rede"></div>
+
+        <div class="rolagem">
+          <table class="tabela-arq" id="tabelaArq">
+            <thead>
+              <tr>
+                <th>Arquitetura testada</th>
+                <th class="num">Parâmetros</th>
+                <th class="num">Acurácia (val)</th>
+                <th class="num">Precision (val)</th>
+                <th class="num">Recall (val)</th>
+                <th class="num">F1 (val)</th>
+                <th class="num">ROC-AUC (val)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    Métricas de teste medidas em um conjunto separado antes do treino e usado apenas
+    na avaliação final. O modelo classifica o <em>tipo</em> de uma ocorrência já
+    registrada ou hipotética; ele não estima o risco de um crime acontecer.
+  </footer>
+</div>
+
+<script>
+/*__INFERENCIA__*/
+const PACOTE = /*__PACOTE__*/;
+const COMPARATIVO = /*__COMPARATIVO__*/;
+
+const $ = (id) => document.getElementById(id);
+const MESES = ["janeiro","fevereiro","março","abril","maio","junho",
+               "julho","agosto","setembro","outubro","novembro","dezembro"];
+const DIAS_PT = {SEGUNDA:"segunda-feira", TERCA:"terça-feira", QUARTA:"quarta-feira",
+                 QUINTA:"quinta-feira", SEXTA:"sexta-feira", SABADO:"sábado", DOMINGO:"domingo"};
+const PERIODO_PT = {"MADRUGADA":"de madrugada","PELA MANHA":"pela manhã",
+                    "A TARDE":"à tarde","A NOITE":"à noite"};
+const ORDEM_DIAS = ["SEGUNDA","TERCA","QUARTA","QUINTA","SEXTA","SABADO","DOMINGO"];
+
+function bonito(txt) {
+  return String(txt).toLowerCase().replace(/(^|[\s/])([a-zà-ú])/g, (m,a,b) => a + b.toUpperCase());
+}
+
+function preencher(sel, valores, formatador) {
+  sel.innerHTML = "";
+  valores.forEach((v) => {
+    const o = document.createElement("option");
+    o.value = v;
+    o.textContent = formatador ? formatador(v) : bonito(v);
+    sel.appendChild(o);
+  });
+}
+
+// ---- monta os seletores a partir das categorias vistas no treino -----------
+const opcoes = PACOTE.opcoes;
+preencher($("f_periodo"), opcoes.periodo, (v) => bonito(v));
+preencher($("f_dia_semana"),
+  ORDEM_DIAS.filter((d) => opcoes.dia_semana.includes(d)),
+  (v) => DIAS_PT[v] || bonito(v));
+preencher($("f_bairro"), opcoes.bairro);
+preencher($("f_tipo_local"), opcoes.tipo_local);
+preencher($("f_marca_objeto"), opcoes.marca_objeto);
+preencher($("f_mes"), opcoes.mes ? opcoes.mes : [1,2,3,4,5,6,7,8,9,10,11,12],
+  (v) => MESES[Number(v) - 1]);
+
+$("contadorEntradas").textContent =
+  PACOTE.colunas_categoricas.length + PACOTE.colunas_numericas.length +
+  " atributos · " + PACOTE.metadados.n_entradas + " entradas na rede";
+
+// ---- banner de origem dos dados -------------------------------------------
+const sintetico = /ESPELHO/i.test(PACOTE.metadados.origem_dos_dados);
+$("avisoOrigem").innerHTML = sintetico
+  ? "<div><strong>Base espelho.</strong> Este modelo foi treinado com uma base sintética que reproduz a estrutura de colunas da SSP-SP, usada para validar o pipeline ponta a ponta. Ao colocar o arquivo oficial em <code>data/raw/</code> e reexecutar o treino, esta mesma página passa a servir o modelo real.</div>"
+  : "<div><strong>Base oficial SSP-SP.</strong> " +
+    Number(PACOTE.metadados.registros).toLocaleString("pt-BR") +
+    " registros do município de São Paulo, após recorte e remoção de duplicidades.</div>";
+
+// ---- ficha tecnica ---------------------------------------------------------
+$("nomeArquitetura").textContent = PACOTE.metadados.arquitetura;
+
+const m = PACOTE.metadados.metricas_teste;
+const virgula = (v, d = 3) => Number(v).toFixed(d).replace(".", ",");
+const LIMIAR = PACOTE.metadados.limiar != null ? PACOTE.metadados.limiar : 0.5;
+
+$("metricas").innerHTML =
+  [["ROC-AUC", m.roc_auc], ["Acur. balanceada", m.acuracia_balanceada],
+   ["Acerto em roubo", m.recall], ["Acerto em furto", m.especificidade],
+   ["Acurácia", m.acuracia]]
+  .filter(([, v]) => v != null)
+  .map(([k, v]) => `<div class="metrica"><dt>${k} (teste)</dt><dd>${virgula(v)}</dd></div>`)
+  .join("") +
+  `<div class="metrica"><dt>Registros</dt><dd>${Number(PACOTE.metadados.registros).toLocaleString("pt-BR")}</dd></div>`;
+
+const b = PACOTE.metadados.baseline_teste;
+if (b) {
+  $("linhaBase").textContent =
+    `Para comparar, chutar sempre ${String(b.classe_majoritaria).toLowerCase()} dá ` +
+    `acurácia ${virgula(b.acuracia)}, acurácia balanceada ${virgula(b.acuracia_balanceada)} ` +
+    `e ROC-AUC 0,500.`;
+}
+
+$("txtLimiar").textContent = "limiar " + virgula(LIMIAR, 2);
+// a barra tem FURTO a esquerda: a fronteira fica em P(furto) = 1 - limiar
+$("corte").style.left = ((1 - LIMIAR) * 100) + "%";
+const prop = PACOTE.metadados.proporcao_roubo;
+$("notaLimiar").textContent = (Math.abs(LIMIAR - 0.5) < 0.005)
+  ? "A rede classifica como roubo quando P(roubo) passa de 50% (linha tracejada)."
+  : `A rede classifica como roubo quando P(roubo) passa de ${virgula(LIMIAR * 100, 1)}% ` +
+    `(linha tracejada), e não de 50%. ` +
+    (prop != null ? `Como ${virgula(prop * 100, 0)}% dos registros da base são roubo, ` : "") +
+    `esse limiar foi escolhido na validação para dar peso igual ao acerto em roubo e em furto.`;
+
+const densas = PACOTE.pesos.filter((c) => c.tipo === "dense");
+const temBN = PACOTE.pesos.some((c) => c.tipo === "batchnorm");
+$("rede").innerHTML =
+  [`<code>entrada ${PACOTE.metadados.n_entradas}</code>`]
+  .concat(densas.map((c, i) =>
+    `<span class="seta">→</span><code>${c.b.length} ${c.ativacao}${
+      (temBN && i < densas.length - 1) ? " + BN + dropout" : ""}</code>`))
+  .join("") + `<span class="seta">→</span><code>P(roubo)</code>`;
+
+$("tabelaArq").querySelector("tbody").innerHTML = COMPARATIVO.map((r) => `
+  <tr class="${r.Arquitetura === PACOTE.metadados.arquitetura ? "escolhida" : ""}">
+    <td>${r.Arquitetura}</td>
+    <td class="num">${Number(r.Parametros).toLocaleString("pt-BR")}</td>
+    <td class="num">${virgula(r["Acuracia (val)"])}</td>
+    <td class="num">${virgula(r["Precision (val)"])}</td>
+    <td class="num">${virgula(r["Recall (val)"])}</td>
+    <td class="num">${virgula(r["F1 (val)"])}</td>
+    <td class="num">${virgula(r["ROC-AUC (val)"])}</td>
+  </tr>`).join("");
+
+// ---- formulario ------------------------------------------------------------
+let periodoManual = false;
+
+function lerFicha() {
+  return {
+    hora: Number($("f_hora").value),
+    periodo: $("f_periodo").value,
+    dia_semana: $("f_dia_semana").value,
+    bairro: $("f_bairro").value,
+    tipo_local: $("f_tipo_local").value,
+    marca_objeto: $("f_marca_objeto").value,
+    mes: Number($("f_mes").value),
+    dias_ate_comunicacao: Number($("f_dias").value),
+  };
+}
+
+function escreverFicha(v) {
+  if (v.hora !== undefined) { $("f_hora").value = v.hora; }
+  ["periodo","dia_semana","bairro","tipo_local","marca_objeto","mes"].forEach((c) => {
+    if (v[c] !== undefined) $("f_" + c).value = v[c];
+  });
+  if (v.dias_ate_comunicacao !== undefined) $("f_dias").value = v.dias_ate_comunicacao;
+  periodoManual = v.periodo !== undefined;
+  sincronizarHora(!periodoManual);
+}
+
+function sincronizarHora(ajustaPeriodo) {
+  const h = Number($("f_hora").value);
+  $("relogio").textContent = String(h).padStart(2, "0") + "h";
+  if (ajustaPeriodo) {
+    const p = periodoDaHora(h);
+    if ([...$("f_periodo").options].some((o) => o.value === p)) $("f_periodo").value = p;
+  }
+}
+
+function pct(x) { return (x * 100).toFixed(1).replace(".", ",") + "%"; }
+
+/* O resultado na tela vale para a ficha que foi classificada, não para a que está
+   sendo digitada. Ao mexer num campo, o painel esmaece e avisa que está defasado;
+   o botão Classificar é o que de fato aciona a rede. */
+function marcarPendente() {
+  $("painelResultado").classList.add("pendente");
+  $("avisoPendente").hidden = false;
+}
+
+function atualizar() {
+  const ficha = lerFicha();
+  const r = classificar(PACOTE, ficha);
+
+  $("painelResultado").classList.remove("pendente");
+  $("avisoPendente").hidden = true;
+
+  $("classe").textContent = r.classe;
+  $("classe").className = "classe " + r.classe.toLowerCase();
+  $("resumoProb").textContent = "P(roubo) " + pct(r.roubo) +
+    (r.roubo >= r.limiar ? " · acima" : " · abaixo") + " do limiar de " + pct(r.limiar);
+
+  const pf = Math.round(r.furto * 1000) / 10;
+  $("segFurto").style.width = pf + "%";
+  $("segRoubo").style.width = (100 - pf) + "%";
+  $("pctFurto").textContent = pf >= 12 ? pct(r.furto) : "";
+  $("pctRoubo").textContent = (100 - pf) >= 12 ? pct(r.roubo) : "";
+
+  const desc = `${bonito(ficha.tipo_local).toLowerCase()}, no bairro ${bonito(ficha.bairro)}, ` +
+               `em uma ${DIAS_PT[ficha.dia_semana]} ${PERIODO_PT[ficha.periodo] || ""} ` +
+               `(${String(ficha.hora).padStart(2,"0")}h)`;
+  $("textoCerto").textContent =
+    `dado que uma subtração de celular foi registrada em ${desc}, o modelo atribui ` +
+    `${pct(r.roubo)} à classe roubo e ${pct(r.furto)} à classe furto.`;
+  $("textoErrado").textContent =
+    `dizer que há ${pct(r.roubo)} de chance de ocorrer um roubo nesse bairro e horário. ` +
+    `A rede não calcula risco: ela só compara as características de um registro que já existe.`;
+}
+
+$("f_hora").addEventListener("input", () => { sincronizarHora(!periodoManual); marcarPendente(); });
+$("f_periodo").addEventListener("change", () => {
+  periodoManual = true;
+  $("ajudaPeriodo").textContent = "Definido manualmente.";
+  marcarPendente();
+});
+["f_dia_semana","f_bairro","f_tipo_local","f_marca_objeto","f_mes","f_dias"]
+  .forEach((id) => $(id).addEventListener("change", marcarPendente));
+$("ficha").addEventListener("submit", (e) => { e.preventDefault(); atualizar(); });
+
+// ---- exemplos e sorteio ----------------------------------------------------
+function achar(lista, alvo, reserva) {
+  return lista.find((v) => v.includes(alvo)) || reserva || lista[0];
+}
+const EXEMPLOS = [
+  { hora: 21, dia_semana: "SEXTA", bairro: achar(opcoes.bairro, "SE"),
+    tipo_local: achar(opcoes.tipo_local, "VIA PUBLICA"),
+    marca_objeto: achar(opcoes.marca_objeto, "APPLE"), mes: 6, dias_ate_comunicacao: 0 },
+  { hora: 23, dia_semana: "SABADO", bairro: achar(opcoes.bairro, "PINHEIROS"),
+    tipo_local: achar(opcoes.tipo_local, "BAR"),
+    marca_objeto: achar(opcoes.marca_objeto, "SAMSUNG"), mes: 11, dias_ate_comunicacao: 2 },
+  { hora: 8, dia_semana: "TERCA", bairro: achar(opcoes.bairro, "ITAQUERA"),
+    tipo_local: achar(opcoes.tipo_local, "TRANSPORTE"),
+    marca_objeto: achar(opcoes.marca_objeto, "MOTOROLA"), mes: 3, dias_ate_comunicacao: 1 },
+];
+document.querySelectorAll("[data-exemplo]").forEach((b) => {
+  b.addEventListener("click", () => {
+    const ex = { ...EXEMPLOS[Number(b.dataset.exemplo)] };
+    delete ex.periodo;
+    $("ajudaPeriodo").textContent = "Acompanha a hora; pode ser alterado.";
+    escreverFicha(ex);
+    atualizar();
+  });
+});
+
+$("btnSorteio").addEventListener("click", () => {
+  const sorteia = (a) => a[Math.floor(Math.random() * a.length)];
+  $("ajudaPeriodo").textContent = "Acompanha a hora; pode ser alterado.";
+  escreverFicha({
+    hora: Math.floor(Math.random() * 24),
+    dia_semana: sorteia(ORDEM_DIAS.filter((d) => opcoes.dia_semana.includes(d))),
+    bairro: sorteia(opcoes.bairro),
+    tipo_local: sorteia(opcoes.tipo_local),
+    marca_objeto: sorteia(opcoes.marca_objeto),
+    mes: sorteia([...$("f_mes").options].map((o) => o.value)),
+    dias_ate_comunicacao: sorteia([0, 0, 1, 2, 3, 5, 8]),
+  });
+  atualizar();
+});
+
+// ---- estado inicial: uma ocorrencia plausivel, ja classificada -------------
+// Se algo falhar, a pagina mostra o motivo em vez de ficar muda.
+try {
+  escreverFicha({ ...EXEMPLOS[0] });
+  atualizar();
+} catch (e) {
+  const cx = document.querySelector("#painelResultado");
+  if (cx) {
+    cx.innerHTML = '<p style="color:var(--roubo);font-size:13px;line-height:1.5">' +
+      "<strong>A classificação falhou nesta página.</strong><br>" +
+      String(e && e.message ? e.message : e).replace(/[<>]/g, "") +
+      "<br><br><span style=\"color:var(--tinta-fraca)\">" +
+      String((e && e.stack ? e.stack : "")).split("\n").slice(1, 3).join(" ")
+        .replace(/[<>]/g, "") + "</span></p>";
+  }
+  throw e;
+}
+</script>

@@ -1,0 +1,243 @@
+{
+  "relatorio_dados": {
+    "registros_iniciais": 383635,
+    "registros_capital": 216129,
+    "descartados_rubrica_ambigua": 78189,
+    "chave_boletim": [
+      "ANO_BO",
+      "NUM_BO",
+      "NOME_DELEGACIA"
+    ],
+    "apos_recorte_e_rotulo": 183812,
+    "criterio_duplicidade": "numero do boletim",
+    "duplicatas_removidas": 22187,
+    "apos_limpeza_temporal": 78868,
+    "amostragem": "amostra aleatoria de 20000 registros",
+    "registros_finais": 20000,
+    "proporcao_roubo": 0.6664,
+    "origem": "OFICIAL (SSP-SP, arquivos em data/raw/)"
+  },
+  "tamanhos": {
+    "treino": 13999,
+    "validacao": 3001,
+    "teste": 3000
+  },
+  "n_entradas": 62,
+  "resultados": {
+    "A - rasa (32)": {
+      "config": {
+        "camadas": [
+          32
+        ],
+        "dropout": 0.0,
+        "l2": 0.0,
+        "batchnorm": false,
+        "lr": 0.001,
+        "epocas": 120,
+        "batch": 64,
+        "nome": "A"
+      },
+      "descricao": "Linha de base: uma unica camada oculta, sem regularizacao. Serve para medir quanto as arquiteturas maiores realmente agregam.",
+      "parametros": 2049,
+      "epocas_efetivas": 50,
+      "limiar": 0.711401641368866,
+      "treino": {
+        "acuracia": 0.6699764268876348,
+        "acuracia_balanceada": 0.6999843686985598,
+        "precision": 0.8530514319988004,
+        "recall": 0.6098188444635009,
+        "especificidade": 0.7901498929336188,
+        "f1": 0.7112139017377173,
+        "f1_macro": 0.6631069508688586,
+        "roc_auc": 0.7787380214536743
+      },
+      "val": {
+        "acuracia": 0.6567810729756748,
+        "acuracia_balanceada": 0.6803743756243756,
+        "precision": 0.8303814713896458,
+        "recall": 0.6095,
+        "especificidade": 0.7512487512487512,
+        "f1": 0.7029988465974625,
+        "f1_macro": 0.648263432769923,
+        "roc_auc": 0.7441201298701299
+      },
+      "val_limiar_05": {
+        "acuracia": 0.7254248583805398,
+        "acuracia_balanceada": 0.6393096903096903,
+        "precision": 0.7433774834437086,
+        "recall": 0.898,
+        "especificidade": 0.3806193806193806,
+        "f1": 0.8134057971014492,
+        "f1_macro": 0.6469298846793501,
+        "roc_auc": 0.7441201298701299
+      }
+    },
+    "B - profunda (64-32) + dropout": {
+      "config": {
+        "camadas": [
+          64,
+          32
+        ],
+        "dropout": 0.3,
+        "l2": 0.0,
+        "batchnorm": true,
+        "lr": 0.001,
+        "epocas": 120,
+        "batch": 64,
+        "nome": "B"
+      },
+      "descricao": "Duas camadas ocultas para compor interacoes entre atributos (ex.: periodo x tipo de local). Dropout 0,3 e BatchNormalization para estabilizar o treino e segurar o sobreajuste que a capacidade extra permitiria.",
+      "parametros": 6529,
+      "epocas_efetivas": 26,
+      "limiar": 0.6684565544128418,
+      "treino": {
+        "acuracia": 0.686549039217087,
+        "acuracia_balanceada": 0.6924209075657565,
+        "precision": 0.8229833965224213,
+        "recall": 0.6747775753028191,
+        "especificidade": 0.7100642398286938,
+        "f1": 0.741547885498881,
+        "f1_macro": 0.6716813837657745,
+        "roc_auc": 0.7708704500231027
+      },
+      "val": {
+        "acuracia": 0.6824391869376875,
+        "acuracia_balanceada": 0.6839058441558441,
+        "precision": 0.8132854578096947,
+        "recall": 0.6795,
+        "especificidade": 0.6883116883116883,
+        "f1": 0.7403977117951512,
+        "f1_macro": 0.6657801514788713,
+        "roc_auc": 0.7451915584415584
+      },
+      "val_limiar_05": {
+        "acuracia": 0.7297567477507497,
+        "acuracia_balanceada": 0.6440566933066934,
+        "precision": 0.7459660736450144,
+        "recall": 0.9015,
+        "especificidade": 0.3866133866133866,
+        "f1": 0.8163912157573013,
+        "f1_macro": 0.6523596457335402,
+        "roc_auc": 0.7451915584415584
+      },
+      "teste": {
+        "acuracia": 0.6543333333333333,
+        "acuracia_balanceada": 0.6613189211988612,
+        "precision": 0.8010012515644556,
+        "recall": 0.64032016008004,
+        "especificidade": 0.6823176823176823,
+        "f1": 0.7117041979427301,
+        "f1_macro": 0.6400801472443571,
+        "roc_auc": 0.7452627412607402
+      }
+    },
+    "C - larga (128-64-32) + L2": {
+      "config": {
+        "camadas": [
+          128,
+          64,
+          32
+        ],
+        "dropout": 0.4,
+        "l2": 0.0001,
+        "batchnorm": true,
+        "lr": 0.0005,
+        "epocas": 150,
+        "batch": 128,
+        "nome": "C"
+      },
+      "descricao": "Tres camadas ocultas, dropout 0,4, penalizacao L2 e taxa de aprendizado reduzida. Testa se mais capacidade ainda traz ganho ou se o problema ja saturou.",
+      "parametros": 19329,
+      "epocas_efetivas": 57,
+      "limiar": 0.6750378608703613,
+      "treino": {
+        "acuracia": 0.6844774626759054,
+        "acuracia_balanceada": 0.7033251404808702,
+        "precision": 0.8433044450656975,
+        "recall": 0.6466931075142031,
+        "especificidade": 0.7599571734475374,
+        "f1": 0.7320269368440211,
+        "f1_macro": 0.6742201553521017,
+        "roc_auc": 0.7823239475899219
+      },
+      "val": {
+        "acuracia": 0.6631122959013662,
+        "acuracia_balanceada": 0.6763918581418581,
+        "precision": 0.8175979447655748,
+        "recall": 0.6365,
+        "especificidade": 0.7162837162837162,
+        "f1": 0.7157717177396683,
+        "f1_macro": 0.6511373926121654,
+        "roc_auc": 0.7423164335664335
+      },
+      "val_limiar_05": {
+        "acuracia": 0.7260913028990337,
+        "acuracia_balanceada": 0.6433026973026973,
+        "precision": 0.7464435146443514,
+        "recall": 0.892,
+        "especificidade": 0.3946053946053946,
+        "f1": 0.8127562642369021,
+        "f1_macro": 0.6514153529621235,
+        "roc_auc": 0.7423164335664335
+      }
+    }
+  },
+  "tabela": [
+    {
+      "Arquitetura": "B - profunda (64-32) + dropout",
+      "Parametros": 6529,
+      "Epocas": 26,
+      "Acuracia (val)": 0.6824391869376875,
+      "Precision (val)": 0.8132854578096947,
+      "Recall (val)": 0.6795,
+      "F1 (val)": 0.7403977117951512,
+      "ROC-AUC (val)": 0.7451915584415584,
+      "Limiar": 0.6684565544128418
+    },
+    {
+      "Arquitetura": "A - rasa (32)",
+      "Parametros": 2049,
+      "Epocas": 50,
+      "Acuracia (val)": 0.6567810729756748,
+      "Precision (val)": 0.8303814713896458,
+      "Recall (val)": 0.6095,
+      "F1 (val)": 0.7029988465974625,
+      "ROC-AUC (val)": 0.7441201298701299,
+      "Limiar": 0.711401641368866
+    },
+    {
+      "Arquitetura": "C - larga (128-64-32) + L2",
+      "Parametros": 19329,
+      "Epocas": 57,
+      "Acuracia (val)": 0.6631122959013662,
+      "Precision (val)": 0.8175979447655748,
+      "Recall (val)": 0.6365,
+      "F1 (val)": 0.7157717177396683,
+      "ROC-AUC (val)": 0.7423164335664335,
+      "Limiar": 0.6750378608703613
+    }
+  ],
+  "melhor": "B - profunda (64-32) + dropout",
+  "limiar": 0.6684565544128418,
+  "baseline_teste": {
+    "acuracia": 0.6663333333333333,
+    "acuracia_balanceada": 0.5,
+    "precision": 0.6663333333333333,
+    "recall": 1.0,
+    "especificidade": 0.0,
+    "f1": 0.7997599519903981,
+    "f1_macro": 0.39987997599519903,
+    "roc_auc": 0.5,
+    "classe_majoritaria": "ROUBO"
+  },
+  "matriz_confusao_teste": [
+    [
+      683,
+      318
+    ],
+    [
+      719,
+      1280
+    ]
+  ]
+}
