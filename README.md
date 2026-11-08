@@ -40,7 +40,7 @@ máxima da ordem de **1e-7** (erro de ponto flutuante).
 **Secretaria da Segurança Pública do Estado de São Paulo (SSP-SP)** — Portal de
 Estatísticas → Consultas → **Bases de Dados** → *Celulares subtraídos*
 
-🔗 https://www.ssp.sp.gov.br/estatistica/consultas
+🔗 https://www.ssp.sp.gov.br/estatistica/consultas --> Celulares Subtraídos 2025 
 
 ### Procedimento de obtenção
 
