@@ -19,7 +19,7 @@ violência ou grave ameaça) ou com **furto** (art. 155 — subtração sem viol
 
 ## Aplicação web
 
-**🔗 Link da aplicação:** _(preencher com a URL após publicar — veja "Publicar" abaixo)_
+**🔗 Aplicação web:** **[Abrir no navegador](https://nicolas-nishimura.github.io/gs-mlp-sp/)** 
 
 A aplicação recebe os oito campos que a equipe usou no treino (hora, período, dia da
 semana, bairro, tipo de local, marca do aparelho, mês e dias até o registro do B.O.),
