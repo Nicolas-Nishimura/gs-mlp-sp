@@ -156,7 +156,7 @@ não se deixam enganar pela proporção das classes, o ganho real da rede aparec
 ## Como reproduzir
 
 ```bash
-git clone <url-deste-repositorio>
+git clone https://github.com/Nicolas-Nishimura/gs-mlp-sp.git
 cd gs-mlp-sp
 
 python -m venv .venv
@@ -221,8 +221,6 @@ A página estática é um arquivo único sem dependências — qualquer hospedag
   cada novo treino, rode `python src/gerar_demo.py` e copie `app/index.html` por
   cima de `docs/index.html`.
 - **Netlify / Vercel / Cloudflare Pages:** arraste a pasta `app/`.
-
-Depois, preencha o link no topo deste README.
 
 ---
 
